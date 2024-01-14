@@ -15,15 +15,18 @@ def convert_audio(input_file):
     subprocess.run(command, shell=True)
     return output_temp_file
     
-def run_external_tool(input_wav_file, language, output_type):
+def run_external_tool(input_file, output_temp_file, language, output_type):
+    input_file = Path(input_file)
     exe_path = "main.exe"
     model_path = "models\\\\ggml-large-v2.bin"
     output_folder = "transcripts"
+    output_file = os.path.join(output_folder,input_file.name)
 
     if not Path(output_folder).exists():
         os.makedirs(output_folder)
     
-    command = f"{exe_path} -f {input_wav_file} -l {language} -m {model_path} -o{output_type} -of {output_folder}"
+    command = f"{exe_path} -f {output_temp_file} -l {language} -m {model_path} -o{output_type} -of {output_file}"
+    print(command)
     subprocess.run(command, shell=True)
 
 def remove_temp_files(output_temp_file):
@@ -48,5 +51,5 @@ if __name__ == "__main__":
     output_type = sys.argv[3]
     
     output_temp_file=convert_audio(input_file)
-    run_external_tool(output_temp_file, language, output_type)
+    run_external_tool(input_file, output_temp_file, language, output_type)
     remove_temp_files(output_temp_file)
