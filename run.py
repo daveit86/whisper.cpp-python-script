@@ -19,6 +19,9 @@ def run_external_tool(input_wav_file, language, output_type):
     exe_path = "main.exe"
     model_path = "models\\\\ggml-large-v2.bin"
     output_folder = "transcripts"
+
+    if not Path(output_folder).exists():
+        os.makedirs(output_folder)
     
     command = f"{exe_path} -f {input_wav_file} -l {language} -m {model_path} -o{output_type} -of {output_folder}"
     subprocess.run(command, shell=True)
